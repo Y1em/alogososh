@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  width: 377px;
+  margin-right: 12px;
+}
+
+.letterContainer {
+  margin-top: 150px;
+  display: flex;
+  justify-content: center;
+}
+
+.letter {
+  margin-right: 16px;
+}
+
+.letter:last-child {
+  margin-right: 0;
+}
