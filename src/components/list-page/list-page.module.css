@@ -1,0 +1,41 @@
+.form {
+  display: grid;
+  grid-template-columns: repeat(5, min-content);
+  grid-template-rows: repeat(2, min-content);
+  gap: 12px;
+  align-content: center;
+  justify-content: center;
+}
+
+.input {
+  width: 204px;
+}
+
+.button {
+  width: 175px;
+}
+
+.button_wide {
+  width: 362px;
+  grid-column-start: 2;
+  grid-column-start: span 2;
+}
+
+.circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.space {
+  margin-right: 15px;
+}
+
+.stackContainer {
+  margin-top: 100px;
+  display: grid;
+  column-gap: 15px;
+  grid-auto-flow: column;
+  align-content: center;
+  justify-content: center;
+}

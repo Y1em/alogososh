@@ -1,16 +1,17 @@
 import { ElementStates, TArrLetter, TSortArr } from "../types/element-states";
+import { arrowColors } from "../constants/element-captions";
 
 export function createObjArr(arr: string[]) {
   const objArr: TArrLetter = [];
   arr.forEach((el) => {
     const obj = {
-      "element": el,
-      "status": ElementStates.Default,
-    }
+      element: el,
+      status: ElementStates.Default,
+    };
     objArr.push(obj);
-  })
+  });
   return objArr;
-};
+}
 
 export function swap(arr: TArrLetter | TSortArr, start: number, end: number) {
   const temp = arr[start].element;
@@ -19,21 +20,28 @@ export function swap(arr: TArrLetter | TSortArr, start: number, end: number) {
 }
 
 export function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
-
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export function randomArr() {
-  let columns: number = Math.round(Math.random()*17);
+  let columns: number = Math.round(Math.random() * 17);
   if (columns < 3) {
     columns = 3;
   }
   const arr = [];
   for (let i = 0; i < columns; i++) {
     arr.push({
-      "element": Math.round(Math.random()*100),
-      "status": ElementStates.Default,
-    })
+      element: Math.round(Math.random() * 100),
+      status: ElementStates.Default,
+    });
   }
-  return arr
+  return arr;
+}
+
+export function fillArrow(index: number, arrowArray: number[]) {
+  for (let i = 0; i < arrowArray.length - 1; i++) {
+    if (index === arrowArray[i]) {
+      return arrowColors.changing;
+    }
+  }
 }

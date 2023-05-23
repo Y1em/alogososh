@@ -11,22 +11,25 @@ import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { Direction } from "../../types/direction";
 
 export const SortingPage: React.FC = () => {
-
   const [arr, setArr] = React.useState<TSortArr>([]);
   const [sortType, setType] = React.useState<string>("selection");
   const [isLoad, setLoad] = React.useState<boolean>(false);
-  const [sortDirection, setDirection] = React.useState<"toLow" | "toHigh" | "">("");
+  const [sortDirection, setDirection] = React.useState<"toLow" | "toHigh" | "">(
+    ""
+  );
 
-  async function bubbleSort (array: TSortArr, direction: string) {
+  async function bubbleSort(array: TSortArr, direction: string) {
     setLoad(true);
     let condition = undefined;
     for (let i = array.length - 1; i >= 0; i--) {
-      for (let j = 0; j < i ; j++) {
+      for (let j = 0; j < i; j++) {
         array[j].status = ElementStates.Changing;
         array[j + 1].status = ElementStates.Changing;
         setArr([...arr]);
         await delay(SHORT_DELAY_IN_MS);
-        direction === "toHigh" ? condition = array[j].element > array[j + 1].element : condition = array[j].element < array[j + 1].element
+        direction === "toHigh"
+          ? (condition = array[j].element > array[j + 1].element)
+          : (condition = array[j].element < array[j + 1].element);
         if (condition) {
           swap(array, j, j + 1);
         }
@@ -48,7 +51,9 @@ export const SortingPage: React.FC = () => {
         setArr([...arr]);
         await delay(SHORT_DELAY_IN_MS);
         array[j].status = ElementStates.Default;
-        direction === "toHigh" ? condition = array[maxInd].element > array[j].element : condition = array[maxInd].element < array[j].element
+        direction === "toHigh"
+          ? (condition = array[maxInd].element > array[j].element)
+          : (condition = array[maxInd].element < array[j].element);
         if (condition) {
           array[maxInd].status = ElementStates.Default;
           maxInd = j;
@@ -58,15 +63,15 @@ export const SortingPage: React.FC = () => {
       array[i].status = ElementStates.Modified;
     }
     setLoad(false);
-  };
+  }
 
   function newArrButtonClick() {
-    setArr(randomArr())
+    setArr(randomArr());
   }
 
   function resetStatusAfterSort(array: TSortArr) {
     if (array[0].status === ElementStates.Modified) {
-      array.forEach((el) => el.status = ElementStates.Default)
+      array.forEach((el) => (el.status = ElementStates.Default));
     }
   }
 
@@ -74,10 +79,10 @@ export const SortingPage: React.FC = () => {
     setDirection(direction);
     if (arr.length > 0 && sortType === "bubble") {
       resetStatusAfterSort(arr);
-      bubbleSort(arr, direction)
+      bubbleSort(arr, direction);
     } else if (arr.length > 0 && sortType === "selection") {
       resetStatusAfterSort(arr);
-      selectionSort(arr, direction)
+      selectionSort(arr, direction);
     }
   }
 
@@ -86,12 +91,8 @@ export const SortingPage: React.FC = () => {
   }
 
   return (
-    <SolutionLayout
-      title="Сортировка массива"
-      extraClass={style.container}
-    >
+    <SolutionLayout title="Сортировка массива" extraClass={style.container}>
       <form className={style.form}>
-
         <RadioInput
           label="Выбор"
           name="sortType"
@@ -112,8 +113,8 @@ export const SortingPage: React.FC = () => {
         />
 
         <Button
-          type = "button"
-          text = "По возрастанию"
+          type="button"
+          text="По возрастанию"
           onClick={() => sortClick("toHigh")}
           disabled={isLoad}
           isLoader={isLoad && sortDirection === "toHigh" ? true : false}
@@ -122,8 +123,8 @@ export const SortingPage: React.FC = () => {
         />
 
         <Button
-          type = "button"
-          text = "По убыванию"
+          type="button"
+          text="По убыванию"
           onClick={() => sortClick("toLow")}
           disabled={isLoad}
           isLoader={isLoad && sortDirection === "toLow" ? true : false}
@@ -132,25 +133,19 @@ export const SortingPage: React.FC = () => {
         />
 
         <Button
-          type = "button"
-          text = "Новый массив"
+          type="button"
+          text="Новый массив"
           onClick={newArrButtonClick}
           disabled={isLoad}
           extraClass={style.button}
         />
-
       </form>
 
       <div className={style.array}>
-        {arr && arr.map((n, index) => {
-          return (
-            <Column
-              index={n.element}
-              state={n.status}
-              key={index}
-            />
-          )
-        })}
+        {arr &&
+          arr.map((n, index) => {
+            return <Column index={n.element} state={n.status} key={index} />;
+          })}
       </div>
     </SolutionLayout>
   );

@@ -7,41 +7,32 @@ import { Circle } from "../ui/circle/circle";
 import { ElementStates, TLetter, TArrLetter } from "../../types/element-states";
 import { delay } from "../../utils/utils";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { Stack } from "../classes/stack";
 
 export const StackPage: React.FC = () => {
+  const stack = React.useMemo(() => new Stack<TLetter>(), []);
   const [inputValue, setInputValue] = React.useState<string>("");
   const [arr, setArr] = React.useState<TArrLetter>([]);
   const [disabled, setDisabled] = React.useState<boolean>(false);
 
-  async function push(array: TArrLetter, item: TLetter) {
-    setDisabled(true);
-    array.push(item);
-    await delay(SHORT_DELAY_IN_MS);
-    setArr((prev) => {
-      prev[prev.length - 1].status = ElementStates.Default;
-      return [...prev]
-    })
-    setDisabled(false);
-  };
-
-  async function pop(array: TArrLetter) {
-    setDisabled(true);
-    array[array.length - 1].status = ElementStates.Changing;
-    await delay(SHORT_DELAY_IN_MS);
-    array.pop();
-    setDisabled(false);
-  };
-
-  function onFormSubmit (e: SyntheticEvent) {
+  async function onFormSubmit(e: SyntheticEvent) {
     e.preventDefault();
+    setDisabled(true);
     if (inputValue !== "" && arr.length < 20) {
       const item: TLetter = {
         element: inputValue,
-        status: ElementStates.Changing
-      }
-      push(arr, item);
+        status: ElementStates.Changing,
+      };
+      stack.push(item);
+      setArr([...stack.getArray()]);
+      await delay(SHORT_DELAY_IN_MS);
+      setArr((prev) => {
+        prev[prev.length - 1].status = ElementStates.Default;
+        return [...prev];
+      });
     }
-    setInputValue("")
+    setInputValue("");
+    setDisabled(false);
   }
 
   const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,22 +40,27 @@ export const StackPage: React.FC = () => {
   };
 
   function onClean() {
-    setArr([])
+    stack.clear();
+    setArr([...stack.getArray()]);
   }
 
-  function onDelete() {
+  async function onDelete() {
     if (arr.length > 0) {
-      pop(arr);
+      setDisabled(true);
+      setArr((prev) => {
+        prev[prev.length - 1].status = ElementStates.Changing;
+        return [...prev];
+      });
+      await delay(SHORT_DELAY_IN_MS);
+      stack.pop();
+      setArr([...stack.getArray()]);
+      setDisabled(false);
     }
   }
 
   return (
     <SolutionLayout title="Стек">
-
-      <form
-        className={style.form}
-        onSubmit={onFormSubmit}
-      >
+      <form className={style.form} onSubmit={onFormSubmit}>
         <Input
           maxLength={4}
           isLimitText={true}
@@ -95,21 +91,21 @@ export const StackPage: React.FC = () => {
         />
       </form>
 
-      <div className={style.stackContainer} >
-        {arr && arr.map((el, index, array) => {
-          return (
-            <Circle
-              state={el.status}
-              letter={el.element}
-              extraClass={style.letter}
-              key={index}
-              head={index === array.length - 1 ? "top" : ""}
-              index={index}
-            />
-          )
-        })}
+      <div className={style.stackContainer}>
+        {arr &&
+          arr.map((el, index, array) => {
+            return (
+              <Circle
+                state={el.status}
+                letter={el.element}
+                extraClass={style.letter}
+                key={index}
+                head={index === array.length - 1 ? "top" : ""}
+                index={index}
+              />
+            );
+          })}
       </div>
-
     </SolutionLayout>
   );
 };

@@ -2,12 +2,11 @@ import React, { SyntheticEvent } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
-import style from "./string.module.css"
+import style from "./string.module.css";
 import { Circle } from "../ui/circle/circle";
 import { DELAY_IN_MS } from "../../constants/delays";
 import { createObjArr, swap, delay } from "../../utils/utils";
 import { ElementStates, TArrLetter } from "../../types/element-states";
-
 
 export const StringComponent: React.FC = () => {
   const [inputValue, setInputValue] = React.useState<string>("");
@@ -27,10 +26,10 @@ export const StringComponent: React.FC = () => {
       setDisplay(true);
       reverse(letterObjArray);
     }
-  }
+  };
 
   async function reverse(arr: TArrLetter) {
-    setLoad(true)
+    setLoad(true);
     for (let i = 0; i < Math.floor(arr.length) / 2; i++) {
       const start = i;
       const end = arr.length - 1 - i;
@@ -43,15 +42,12 @@ export const StringComponent: React.FC = () => {
       arr[end].status = ElementStates.Modified;
       setArr([...arr]);
     }
-    setLoad(false)
+    setLoad(false);
   }
 
   return (
-    <SolutionLayout title="Строка" >
-      <form
-        className={style.container}
-        onSubmit={onFormSubmit}
-      >
+    <SolutionLayout title="Строка">
+      <form className={style.container} onSubmit={onFormSubmit}>
         <Input
           maxLength={11}
           isLimitText={true}
@@ -60,23 +56,20 @@ export const StringComponent: React.FC = () => {
           onChange={onValueChange}
           disabled={isLoad}
         />
-        <Button
-          text={"Развернуть"}
-          type="submit"
-          isLoader={isLoad}
-        />
+        <Button text={"Развернуть"} type="submit" isLoader={isLoad} />
       </form>
-      <div className={style.letterContainer} >
-        {display && arr.map((el, index) => {
-          return (
-            <Circle
-              state={el.status}
-              letter={el.element}
-              extraClass={style.letter}
-              key={index}
-            />
-          )
-        })}
+      <div className={style.letterContainer}>
+        {display &&
+          arr.map((el, index) => {
+            return (
+              <Circle
+                state={el.status}
+                letter={el.element}
+                extraClass={style.letter}
+                key={index}
+              />
+            );
+          })}
       </div>
     </SolutionLayout>
   );
