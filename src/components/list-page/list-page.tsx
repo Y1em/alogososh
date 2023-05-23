@@ -203,7 +203,7 @@ export const ListPage: React.FC = () => {
         list.getArray()[i].status = ElementStates.Changing;
         setArr([...list.getArray()]);
         setColoredArrowArr((prev) => {
-          prev.push(i);
+          prev.push(i - 1);
           return [...prev];
         });
         await delay(SHORT_DELAY_IN_MS);
