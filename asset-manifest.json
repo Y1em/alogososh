@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/alogososh/static/css/main.16850d4c.css",
-    "main.js": "/alogososh/static/js/main.289f8388.js",
+    "main.js": "/alogososh/static/js/main.6f00a8e1.js",
     "static/js/787.0d1937ff.chunk.js": "/alogososh/static/js/787.0d1937ff.chunk.js",
     "static/media/bg.jpg": "/alogososh/static/media/bg.971318c52485d1963a30.jpg",
     "static/media/arr-hover.svg": "/alogososh/static/media/arr-hover.a52854e0c00e33cd4d38.svg",
@@ -19,11 +19,11 @@
     "index.html": "/alogososh/index.html",
     "static/media/loader.svg": "/alogososh/static/media/loader.b935a8aeb021da7b2a90191a58ea95f4.svg",
     "main.16850d4c.css.map": "/alogososh/static/css/main.16850d4c.css.map",
-    "main.289f8388.js.map": "/alogososh/static/js/main.289f8388.js.map",
+    "main.6f00a8e1.js.map": "/alogososh/static/js/main.6f00a8e1.js.map",
     "787.0d1937ff.chunk.js.map": "/alogososh/static/js/787.0d1937ff.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.16850d4c.css",
-    "static/js/main.289f8388.js"
+    "static/js/main.6f00a8e1.js"
   ]
 }
