@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.input {
+  max-width: 377px;
+}
+
+.button {
+  margin-left: 12px;
+}
+
+.button:last-of-type {
+  margin-left: 80px;
+}
+
+.stackContainer {
+  margin-top: 70px;
+  display: grid;
+  grid-template-columns: repeat(7, min-content);
+  column-gap: 16px;
+  grid-auto-flow: row;
+  align-content: center;
+  justify-content: center;
+}

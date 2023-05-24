@@ -1,0 +1,23 @@
+.form {
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  max-width: 377px;
+  margin-right: 12px;
+}
+
+.numberContainer {
+  margin-top: 70px;
+  display: grid;
+  grid-template-columns: repeat(10, min-content);
+  row-gap: 75px;
+  column-gap: 16px;
+  grid-auto-flow: row;
+  align-content: center;
+  justify-content: center;
+}
+
+
+
