@@ -4,46 +4,39 @@ import style from "./fibonacci-page.module.css";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
-import { delay } from "../../utils/utils";
-import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { delay } from "../../utils/common-utils";
+import { SHORT_DELAY_IN_MS } from "../../constants/common-const";
+import { getFibonacciNumbers } from "./utils";
+import { MIN_NUMBER, MAX_NUMBER } from "./const";
 
 export const FibonacciPage: React.FC = () => {
   const [inputValue, setInputValue] = React.useState<string>("");
   const [display, setDisplay] = React.useState<boolean>(false);
   const [arr, setArr] = React.useState<number[]>([]);
   const [isLoad, setLoad] = React.useState<boolean>(false);
+  const fibArr = getFibonacciNumbers(Number(inputValue));
 
   const onFormSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     if (inputValue) {
       setDisplay(true);
-      getFibArr(Number(inputValue));
+      putArray(fibArr);
     } else {
       setDisplay(false);
     }
   };
 
-  async function getFibArr(n: number) {
+  async function putArray(array: number[]) {
+    const tempArr = [];
     setLoad(true);
-    const initArr = [1, 1];
-    if (n == 0) {
-      setArr([initArr[0]]);
-    } else if (n == 1) {
-      setArr([initArr[0]]);
-      await delay(SHORT_DELAY_IN_MS);
-      setArr([...initArr]);
-    } else if (n > 1) {
-      setArr([initArr[0]]);
-      await delay(SHORT_DELAY_IN_MS);
-      setArr([...initArr]);
-      for (let i = 0; i <= n - 2; i++) {
-        await delay(SHORT_DELAY_IN_MS);
-        initArr.push(initArr[i] + initArr[i + 1]);
-        setArr([...initArr]);
+    for (let i = 0; i <= array.length - 1; i++) {
+      if (i > 0) {
+        await delay(SHORT_DELAY_IN_MS)
       }
-    } else {
-      setArr([]);
+      tempArr.push(array[i]);
+      setArr([...tempArr]);
     }
+    setInputValue('');
     setLoad(false);
   }
 
@@ -56,8 +49,8 @@ export const FibonacciPage: React.FC = () => {
       <form className={style.form} onSubmit={onFormSubmit}>
         <Input
           type="number"
-          max={19}
-          min={0}
+          max={MAX_NUMBER}
+          min={MIN_NUMBER}
           isLimitText={true}
           extraClass={style.input}
           value={inputValue}

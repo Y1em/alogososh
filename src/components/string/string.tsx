@@ -4,9 +4,11 @@ import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import style from "./string.module.css";
 import { Circle } from "../ui/circle/circle";
-import { DELAY_IN_MS } from "../../constants/delays";
-import { createObjArr, swap, delay } from "../../utils/utils";
+import { DELAY_IN_MS } from "../../constants/common-const";
+import { swap, delay } from "../../utils/common-utils";
+import { createObjArr } from "./utils";
 import { ElementStates, TArrLetter } from "../../types/element-states";
+import { MAX_LENGHT } from "./const";
 
 export const StringComponent: React.FC = () => {
   const [inputValue, setInputValue] = React.useState<string>("");
@@ -49,7 +51,7 @@ export const StringComponent: React.FC = () => {
     <SolutionLayout title="Строка">
       <form className={style.container} onSubmit={onFormSubmit}>
         <Input
-          maxLength={11}
+          maxLength={MAX_LENGHT}
           isLimitText={true}
           extraClass={style.input}
           value={inputValue}

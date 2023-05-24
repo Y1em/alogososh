@@ -5,18 +5,22 @@ import { Column } from "../ui/column/column";
 import { RadioInput } from "../ui/radio-input/radio-input";
 import style from "./sorting-page.module.css";
 import { ElementStates, TSortArr } from "../../types/element-states";
-import { swap, randomArr } from "../../utils/utils";
-import { delay } from "../../utils/utils";
-import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { swap, delay } from "../../utils/common-utils";
+import { randomArr } from "./utils";
+import { SHORT_DELAY_IN_MS } from "../../constants/common-const";
 import { Direction } from "../../types/direction";
+import {
+  TO_LOW,
+  TO_HIGH,
+  SORT_BUBBLE,
+  SORT_SELECTION
+ } from "./const";
 
 export const SortingPage: React.FC = () => {
   const [arr, setArr] = React.useState<TSortArr>([]);
-  const [sortType, setType] = React.useState<string>("selection");
+  const [sortType, setType] = React.useState<string>(SORT_BUBBLE);
   const [isLoad, setLoad] = React.useState<boolean>(false);
-  const [sortDirection, setDirection] = React.useState<"toLow" | "toHigh" | "">(
-    ""
-  );
+  const [sortDirection, setDirection] = React.useState<typeof TO_LOW | typeof TO_HIGH | "">("");
 
   async function bubbleSort(array: TSortArr, direction: string) {
     setLoad(true);
@@ -27,7 +31,7 @@ export const SortingPage: React.FC = () => {
         array[j + 1].status = ElementStates.Changing;
         setArr([...arr]);
         await delay(SHORT_DELAY_IN_MS);
-        direction === "toHigh"
+        direction === TO_HIGH
           ? (condition = array[j].element > array[j + 1].element)
           : (condition = array[j].element < array[j + 1].element);
         if (condition) {
@@ -51,7 +55,7 @@ export const SortingPage: React.FC = () => {
         setArr([...arr]);
         await delay(SHORT_DELAY_IN_MS);
         array[j].status = ElementStates.Default;
-        direction === "toHigh"
+        direction === TO_HIGH
           ? (condition = array[maxInd].element > array[j].element)
           : (condition = array[maxInd].element < array[j].element);
         if (condition) {
@@ -75,12 +79,12 @@ export const SortingPage: React.FC = () => {
     }
   }
 
-  function sortClick(direction: "toLow" | "toHigh" | "") {
+  function sortClick(direction: typeof TO_LOW | typeof TO_HIGH | "") {
     setDirection(direction);
-    if (arr.length > 0 && sortType === "bubble") {
+    if (arr.length > 0 && sortType === SORT_BUBBLE) {
       resetStatusAfterSort(arr);
       bubbleSort(arr, direction);
-    } else if (arr.length > 0 && sortType === "selection") {
+    } else if (arr.length > 0 && sortType === SORT_SELECTION) {
       resetStatusAfterSort(arr);
       selectionSort(arr, direction);
     }
@@ -96,7 +100,7 @@ export const SortingPage: React.FC = () => {
         <RadioInput
           label="Выбор"
           name="sortType"
-          value="selection"
+          value={SORT_SELECTION}
           defaultChecked
           onChange={changeType}
           disabled={isLoad}
@@ -106,7 +110,7 @@ export const SortingPage: React.FC = () => {
         <RadioInput
           label="Пузырёк"
           name="sortType"
-          value="bubble"
+          value={SORT_BUBBLE}
           onChange={changeType}
           disabled={isLoad}
           extraClass={style.input}
@@ -115,9 +119,9 @@ export const SortingPage: React.FC = () => {
         <Button
           type="button"
           text="По возрастанию"
-          onClick={() => sortClick("toHigh")}
+          onClick={() => sortClick(TO_HIGH)}
           disabled={isLoad}
-          isLoader={isLoad && sortDirection === "toHigh" ? true : false}
+          isLoader={isLoad && sortDirection === TO_HIGH ? true : false}
           sorting={Direction.Ascending}
           extraClass={style.button}
         />
@@ -125,9 +129,9 @@ export const SortingPage: React.FC = () => {
         <Button
           type="button"
           text="По убыванию"
-          onClick={() => sortClick("toLow")}
+          onClick={() => sortClick(TO_LOW)}
           disabled={isLoad}
-          isLoader={isLoad && sortDirection === "toLow" ? true : false}
+          isLoader={isLoad && sortDirection === TO_LOW ? true : false}
           sorting={Direction.Descending}
           extraClass={style.button}
         />

@@ -5,21 +5,30 @@ import { Circle } from "../ui/circle/circle";
 import { Button } from "../ui/button/button";
 import style from "./list-page.module.css";
 import { ArrowIcon } from "../ui/icons/arrow-icon";
-import { LinkedList } from "../classes/list";
+import { LinkedList } from "./class-list";
 import { ElementStates } from "../../types/element-states";
-import { delay } from "../../utils/utils";
-import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { delay } from "../../utils/common-utils";
 import {
   HEAD,
   TAIL,
-  initArr,
-  maxListLength,
-} from "../../constants/element-captions";
-import { Node } from "../classes/list";
-import { fillArrow } from "../../utils/utils";
+  SHORT_DELAY_IN_MS,
+  INPUT_LENGHTH_MAX
+} from "../../constants/common-const";
+import { Node } from "./class-list";
+import { fillArrow } from "./utils";
+import {
+  MAX_LIST_LENGTH,
+  REMOVE_BY_INDEX,
+  REMOVE_FROM_TAIL,
+  REMOVE_FROM_HEAD,
+  ADD_BY_INDEX,
+  ADD_TO_HEAD,
+  ADD_TO_TAIL
+} from "./const";
 
 export const ListPage: React.FC = () => {
-  const list = React.useMemo(() => new LinkedList<string>(initArr), []);
+  const initArr = ["0", "34", "8", "1"];
+  const list = React.useMemo(() => new LinkedList<string>(initArr), []); // eslint-disable-line
   const listArr = list.getArray();
   const [inputValue, setInputValue] = React.useState<string>("");
   const [inputIndex, setInputIndex] = React.useState<string>("");
@@ -38,73 +47,45 @@ export const ListPage: React.FC = () => {
     setInputIndex(e.target.value);
   };
 
-  function getHead(index: number) {
-    function getCircleHead() {
-      if (changeHead) {
-        return (
-          <Circle
-            letter={valueOfEnd}
-            state={ElementStates.Changing}
-            isSmall={true}
-          />
-        );
-      } else {
-        return HEAD;
-      }
+  function getCircleEnd(trigger: boolean, end?: typeof HEAD | typeof TAIL, ) {
+    if (trigger) {
+      return (
+        <Circle
+          letter={valueOfEnd}
+          state={ElementStates.Changing}
+          isSmall={true}
+        />
+      );
+    } else {
+      return end ? end : "";
     }
-    const circle = getCircleHead();
-    if (0 === Number(inputIndex) && index === 0) {
-      return circle;
-    } else if (
-      index === Number(inputIndex) &&
-      inputIndex !== "" &&
-      circleIndex < 0
-    ) {
-      if (changeHead) {
-        return circle;
-      }
-    } else if (inputIndex === "" && inputValue && index === 0) {
-      return circle;
-    } else if (inputIndex === "" && inputValue === "" && index === 0) {
-      return circle;
+  }
+
+  function getHead(index: number) {
+    const circleHead = getCircleEnd(changeHead, HEAD);
+    const circleTail = getCircleEnd(changeTail);
+    if (targetLoader === ADD_TO_HEAD && index === 0) {
+      return circleHead
+    } else if (targetLoader === ADD_TO_TAIL && index === arr.length - 1) {
+      return circleTail
+    } else if (targetLoader === ADD_BY_INDEX && index === Number(inputIndex) && circleIndex < 0) {
+      return circleHead;
     } else if (circleIndex === index) {
-      if (changeHead) {
-        return circle;
-      }
+      return circleHead;
     } else if (index === 0) {
       return HEAD;
     }
   }
 
   function getTail(index: number) {
-    function getCircleTail() {
-      if (changeTail) {
-        return (
-          <Circle
-            letter={valueOfEnd}
-            state={ElementStates.Changing}
-            isSmall={true}
-          />
-        );
-      } else {
-        return TAIL;
-      }
-    }
-    const circle = getCircleTail();
-    if (arr.length - 1 === Number(inputIndex) && index === arr.length - 1) {
-      return circle;
-    } else if (index === Number(inputIndex) && inputIndex !== "") {
-      if (changeTail) {
-        return circle;
-      }
-    } else if (inputIndex === "" && inputValue && index === arr.length - 1) {
-      return circle;
-    } else if (
-      inputIndex === "" &&
-      inputValue === "" &&
-      index === arr.length - 1
-    ) {
-      return circle;
+    const circleHead = getCircleEnd(changeHead);
+    const circleTail = getCircleEnd(changeTail, TAIL);
+    if (targetLoader === REMOVE_FROM_TAIL && index === arr.length - 1) {
+      return circleTail
+    } else if (targetLoader === REMOVE_FROM_HEAD && index === 0) {
+      return circleHead
+    } else if (targetLoader === REMOVE_BY_INDEX && index === Number(inputIndex)) {
+      return circleTail
     } else if (index === arr.length - 1) {
       return TAIL;
     }
@@ -232,7 +213,7 @@ export const ListPage: React.FC = () => {
     <SolutionLayout title="Связный список">
       <form className={style.form}>
         <Input
-          maxLength={4}
+          maxLength={INPUT_LENGHTH_MAX}
           isLimitText={true}
           extraClass={style.input}
           value={inputValue}
@@ -242,41 +223,41 @@ export const ListPage: React.FC = () => {
           text={"Добавить в head"}
           type="button"
           extraClass={style.button}
-          isLoader={targetLoader === "addToHead"}
+          isLoader={targetLoader === ADD_TO_HEAD}
           onClick={(e) => addToEnds(e, HEAD, setChangeHead)}
           disabled={
-            list.getSize() > maxListLength || inputValue === "" || isLoad
+            list.getSize() > MAX_LIST_LENGTH || inputValue === "" || isLoad
           }
-          value="addToHead"
+          value={ADD_TO_HEAD}
         />
         <Button
           text={"Добавить в tail"}
           type="button"
           extraClass={style.button}
-          isLoader={targetLoader === "addToTail"}
+          isLoader={targetLoader === ADD_TO_TAIL}
           onClick={(e) => addToEnds(e, TAIL, setChangeTail)}
           disabled={
-            list.getSize() > maxListLength || inputValue === "" || isLoad
+            list.getSize() > MAX_LIST_LENGTH || inputValue === "" || isLoad
           }
-          value="addToTail"
+          value={ADD_TO_TAIL}
         />
         <Button
           text={"Удалить из head"}
           type="button"
           extraClass={style.button}
           onClick={(e) => deleteFromEnds(e, HEAD, setChangeHead)}
-          isLoader={targetLoader === "removeFromHead"}
+          isLoader={targetLoader === REMOVE_FROM_HEAD}
           disabled={list.getSize() === 0 || isLoad}
-          value="removeFromHead"
+          value={REMOVE_FROM_HEAD}
         />
         <Button
           text={"Удалить из tail"}
           type="button"
           extraClass={style.button}
           onClick={(e) => deleteFromEnds(e, TAIL, setChangeTail)}
-          isLoader={targetLoader === "removeFromTail"}
+          isLoader={targetLoader === REMOVE_FROM_TAIL}
           disabled={list.getSize() === 0 || isLoad}
-          value="removeFromTail"
+          value={REMOVE_FROM_TAIL}
         />
         <Input
           placeholder="Введите индекс"
@@ -296,8 +277,8 @@ export const ListPage: React.FC = () => {
             inputValue === "" ||
             isLoad
           }
-          value="addByIndex"
-          isLoader={targetLoader === "addByIndex"}
+          value={ADD_BY_INDEX}
+          isLoader={targetLoader === ADD_BY_INDEX}
         />
         <Button
           text={"Удалить по индексу"}
@@ -307,8 +288,8 @@ export const ListPage: React.FC = () => {
           disabled={
             inputIndex === "" || Number(inputIndex) >= list.getSize() || isLoad
           }
-          value="removeByIndex"
-          isLoader={targetLoader === "removeByIndex"}
+          value={REMOVE_BY_INDEX}
+          isLoader={targetLoader === REMOVE_BY_INDEX}
         />
       </form>
 
